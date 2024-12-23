@@ -1,11 +1,11 @@
 import Image from "next/image";
-import { LoginDrawer } from "../login-drawer";
-// import { MyDrawer } from "./MyDrawer";
+// import { LoginDrawer } from "../login-drawer";
+import { SearchSuggestion } from "@/types";
 
 interface SelectedResultProps {
-  data: any;
+  data: SearchSuggestion;
   userInfo?: any | undefined;
-  handleGenerateClick: (selection: any) => void;
+  handleGenerateClick: () => void;
 }
 
 function SelectedResult(props: SelectedResultProps) {
@@ -17,7 +17,7 @@ function SelectedResult(props: SelectedResultProps) {
           width={84}
           height={84}
           className="w-24 h-24 mb-3 rounded-full shadow-lg md:mb-0 md:mr-4"
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Googleplex_HQ_%28cropped%29.jpg/640px-Googleplex_HQ_%28cropped%29.jpg"
+          src={data.img.medium}
           alt="Bonnie image"
         />
         <div className="text-center md:text-left">
@@ -25,22 +25,22 @@ function SelectedResult(props: SelectedResultProps) {
             {data.type}
           </span>
           <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-            {data.result.primary_artist.name}
+            {data.album}
           </h5>
           <span className="text-sm text-gray-500 dark:text-gray-400">
-            {data.result.title}
+            {data.artist}
           </span>
         </div>
       </div>
       <div className="flex mt-4 md:mt-2 w-full px-8">
-        <LoginDrawer>
-          <button
-            onClick={() => handleGenerateClick(data)}
-            className="w-full items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Generate
-          </button>
-        </LoginDrawer>
+        {/* <LoginDrawer> */}
+        <button
+          onClick={() => handleGenerateClick()}
+          className="w-full items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Generate
+        </button>
+        {/* </LoginDrawer> */}
       </div>
     </div>
   );

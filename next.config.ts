@@ -18,7 +18,11 @@ const nextConfig: NextConfig = {
         search: "",
       },
       {
-        hostname: "localhost",
+        protocol: "https",
+        hostname: "i.scdn.co",
+        port: "",
+        pathname: "**",
+        search: "",
       },
     ],
   },

@@ -1,6 +1,7 @@
 import React from "react";
-import { Input } from "../ui/input";
 import Image from "next/image";
+import { Input } from "../ui/input";
+import styles from "./styles.module.css";
 
 function Historial() {
   const elems: any[] = [
@@ -23,7 +24,7 @@ function Historial() {
     { image: "1" },
     { image: "1" },
   ];
-  console.log("hola");
+
   return (
     <div className="duration-1200 ease-in-out animate-in fade-in slide-in-from-bottom-4">
       <div className="mb-4 flex flex-col flex-nowrap items-center justify-between gap-2 sm:flex-row sm:justify-center">
@@ -56,7 +57,9 @@ function Historial() {
                 aria-hidden="true"
                 className="absolute inset-0 aspect-square overflow-hidden rounded-xl bg-white transition-opacity duration-200 ease-out z-10 opacity-100"
               >
-                <div className="skeleton h-full w-full bg-gray-200 animate-ayo relative"></div>
+                <div
+                  className={`skeleton h-full w-full bg-gray-200 relative ${styles.animate}`}
+                ></div>
               </div>
             </li>
           );
