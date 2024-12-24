@@ -1,4 +1,4 @@
-import Form from "@/components/form";
+import FormAction from "@/components/form/form-action";
 import Historial from "@/components/historial";
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
           Enjoy music lyrics and expand knowledge
         </p>
 
-        <Form />
+        <FormAction />
       </div>
       <div className="mx-auto flex min-h-screen max-w-5xl flex-col items-stretch pb-28 px-4 sm:px-6">
         <Historial />

@@ -1,4 +1,5 @@
 import { LogOut, Settings, User } from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 function DropDown({ children }: { children: React.ReactNode }) {
   return (

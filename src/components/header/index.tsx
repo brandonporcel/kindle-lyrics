@@ -1,8 +1,8 @@
 import Link from "next/link";
 import React from "react";
 import { SparklesIcon } from "lucide-react";
-import Profile from "../profile";
 import { ThemeToggle } from "./theme-toggle";
+import Profile from "./profile";
 
 function Header() {
   return (
