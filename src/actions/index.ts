@@ -1,148 +1,138 @@
-// "use server";
+"use server";
+import { sendMail } from "@/lib/nodemailer";
+import { parseAlbumTracks, parseSearchResults } from "@/lib/parser.service";
+import axios from "axios";
 
-// const GENIUS_SONG_URI = "https://api.genius.com";
+const SPOTIFY_API = "https://api.spotify.com/v1";
+
+/*
+lyricsfreak=>lyricsfreak usar endpoint de search para canciones y escrapear la respuesta para buscar el link de la busqueda correcta. si lo encuentra, ir y luego volver a escrapear tal respuesta(lyrics)
+https://www.lyricsfreak.com/search.php?q=Smooth+Operator
+--
+ovh => obtener lyrics por artista y cancion
+https://api.lyrics.ovh/v1/smokey%20robinson/quiet%20storm
+
+spotify => buscar albums/artists
+https://api.spotify.com/v1/search?q=bad+bunny&type=album
+
+*/
 
 export const getRelatedSearch = async ({ prompt }: { prompt: string }) => {
-  return [
-    {
-      index: "album",
-      type: "album",
-      result: {
-        annotation_count: 0,
-        api_path: "",
-        artist_names: "",
-        full_title: "AD HONOREM, Vol. 1 - EP" + prompt,
-        header_image_thumbnail_url: "",
-        header_image_url: "",
-        id: 1,
-        lyrics_owner_id: 0,
-        lyrics_state: "",
-        path: "",
-        pyongs_count: 0,
-        relationships_index_url: "",
-        release_date_for_display: "",
-        release_date_with_abbreviated_month_for_display: "",
-        song_art_image_thumbnail_url: "",
-        song_art_image_url: "",
-        title: "AD HONOREM, Vol. 1 - EP",
-        title_with_featured: "",
-        url: "",
-        primary_artist: {
-          id: 1,
-          image_url: "",
-          name: "Dillom & MECHAYRXMEO",
-          url: "https://www.last.fm/music/Dillom+&+MECHAYRXMEO/AD+HONOREM,+Vol.+1+-+EP",
-        },
+  const accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
+
+  if (!accessToken) {
+    throw new Error(
+      "Access token is missing. Please set SPOTIFY_ACCESS_TOKEN in your environment variables."
+    );
+  }
+
+  const params = new URLSearchParams({
+    type: "album",
+    q: prompt,
+    limit: "3",
+  });
+
+  const url = `${SPOTIFY_API}/search?${params.toString()}`;
+
+  try {
+    const { data } = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
       },
-    },
-    {
-      index: "album",
-      type: "album",
-      result: {
-        annotation_count: 0,
-        api_path: "",
-        artist_names: "",
-        full_title: "AD HONOREM, Vol. 1 - EP",
-        header_image_thumbnail_url: "",
-        header_image_url: "",
-        id: 2,
-        lyrics_owner_id: 0,
-        lyrics_state: "",
-        path: "",
-        pyongs_count: 0,
-        relationships_index_url: "",
-        release_date_for_display: "",
-        release_date_with_abbreviated_month_for_display: "",
-        song_art_image_thumbnail_url: "",
-        song_art_image_url: "",
-        title: "AD HONOREM, Vol. 1 - EP",
-        title_with_featured: "",
-        url: "",
-        primary_artist: {
-          id: 2,
-          image_url: "",
-          name: "Dillom & Ill Quentin",
-          url: "https://www.last.fm/music/Dillom+&+Ill+Quentin/AD+HONOREM,+Vol.+1+-+EP",
-        },
-      },
-    },
-    {
-      index: "album",
-      type: "album",
-      result: {
-        annotation_count: 0,
-        api_path: "",
-        artist_names: "",
-        full_title: "AD HONOREM, Vol. 1 - EP",
-        header_image_thumbnail_url:
-          "https://lastfm.freetls.fastly.net/i/u/174s/65f2016ee12e6e27d954392611784d82.png",
-        header_image_url: "",
-        id: 0,
-        lyrics_owner_id: 0,
-        lyrics_state: "",
-        path: "",
-        pyongs_count: 0,
-        relationships_index_url: "",
-        release_date_for_display: "",
-        release_date_with_abbreviated_month_for_display: "",
-        song_art_image_thumbnail_url: "",
-        song_art_image_url: "",
-        title: "AD HONOREM, Vol. 1 - EP",
-        title_with_featured: "",
-        url: "",
-        primary_artist: {
-          id: 0,
-          image_url:
-            "https://lastfm.freetls.fastly.net/i/u/174s/65f2016ee12e6e27d954392611784d82.png",
-          name: "Dillom",
-          url: "https://www.last.fm/music/Dillom/AD+HONOREM,+Vol.+1+-+EP",
-        },
-      },
-    },
-  ];
+    });
+    if (!data.albums || !data.albums.items) return [];
+
+    return parseSearchResults(data.albums.items);
+  } catch (error: any) {
+    throw new Error(`Failed to fetch related search: ${error.message}`);
+  }
 };
 
-// export const getRelatedSearch = async ({
-//   prompt,
-//   includeAlbums,
-// }: {
-//   prompt: string;
-//   includeAlbums: boolean;
-// }): Promise<any[]> => {
-//   try {
-//     const promptParam = prompt.toLocaleLowerCase().trim();
+export const getPDFTemplate = async (data: { albumId: string }) => {
+  const accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
 
-//     const url = `${GENIUS_SONG_URI}/search`;
+  if (!accessToken) {
+    throw new Error(
+      "Access token is missing. Please set SPOTIFY_ACCESS_TOKEN in your environment variables."
+    );
+  }
 
-//     const accessToken =
-//       import.meta.env.GENIUS_ACCESS_TOKEN ??
-//       import.meta.env.PUBLIC_GENIUS_ACCESS_TOKEN;
+  const url = `${SPOTIFY_API}/albums/${data.albumId}/tracks`;
 
-//     const params = {
-//       q: promptParam,
-//       access_token: accessToken,
-//     };
+  try {
+    const response = await axios.get(url, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
 
-//     let parsedRelatedAlbums: HitsEntity[] = [];
-//     if (includeAlbums) {
-//       const res = await getRelatedSearchAlbums(promptParam);
-//       const parsedRelatedResponse = parseMusicSuggestions(res);
-//       parsedRelatedAlbums = orderByFeaturings(parsedRelatedResponse);
-//     }
+    const albumTracks = response.data?.items;
+    if (!albumTracks || albumTracks.length === 0) {
+      throw new Error(`The album does not contain any tracks.`);
+    }
 
-//     const { data }: { data: GeniusSearchResponse } = await axios.get(url, {
-//       params,
-//       headers: {
-//         Accept: "application/json",
-//       },
-//     });
+    const tracks = parseAlbumTracks(albumTracks);
+    let template = "";
 
-//     if (data.response.hits) {
-//       return parsedRelatedAlbums.concat(data.response.hits);
-//     }
-//     return [];
-//   } catch (error) {
-//     console.log(error);
-//     return [];
-//   }
-// };
+    for (const track of tracks) {
+      try {
+        const lyricsResponse = await axios.get(
+          `https://api.lyrics.ovh/v1/${track.artist}/${track.name}`
+        );
+        const lyrics = lyricsResponse.data.lyrics || "Lyrics not available.";
+        template += `<h1>${track.artist} - ${track.name}</h1><p class='pdf-lyrics'>${lyrics}</p>`;
+      } catch (error: any) {
+        console.error(
+          `Error fetching lyrics for ${track.name}:`,
+          error.message
+        );
+        template += `<h1>${track.artist} - ${track.name}</h1><p class='pdf-lyrics'>Lyrics not available.</p>`;
+      }
+    }
+
+    return generateHtmlTemplate(template);
+  } catch (error: any) {
+    throw new Error(`Failed to fetch album tracks: ${error.message}`);
+  }
+};
+
+const generateHtmlTemplate = (template: string): string => {
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Kindle-Genius</title>
+        <style>
+            body {
+                margin: 0;
+            }
+            p.pdf-lyrics{
+              white-space:pre-wrap;
+            }
+        </style>
+    </head>
+    <body>
+      ${template}
+    </body>
+    </html>
+  `;
+};
+
+export const sendAlbumEmail = async ({
+  email,
+  template,
+  albumName,
+}: {
+  email: string;
+  albumName: string;
+  template: string;
+}) => {
+  const response = await sendMail({
+    sendTo: email,
+    subject: `Lyrics for ${albumName}`,
+    text: template,
+    html: template,
+  });
+
+  return response;
+};

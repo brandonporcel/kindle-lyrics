@@ -1,6 +1,6 @@
 "use client";
 
-import { getRelatedSearch } from "@/actions";
+import { getPDFTemplate, getRelatedSearch, sendAlbumEmail } from "@/actions";
 import { debounce } from "@/lib/utils";
 import { EraserIcon } from "lucide-react";
 import {
@@ -13,12 +13,24 @@ import {
 } from "react";
 import SuggestionItem from "../suggestion-search";
 import SelectedResult from "../selected-result";
+import { SearchSuggestion } from "@/types";
+import PdfPresentation from "../pdf-presentation";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 export default function Form() {
   const [prompt, setPrompt] = useState("");
-  const [relatedResults, setRelatedResults] = useState<any[]>([]);
-  const [selectedResult, setSelectedResult] = useState<any | null>(null);
+  const [relatedResults, setRelatedResults] = useState<SearchSuggestion[]>([]);
+  const [selectedResult, setSelectedResult] = useState<SearchSuggestion | null>(
+    null
+  );
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [showPdfPresentation, setShowPdfPresentation] = useState(false);
+  const [scrapingResult, setScrapingResult] = useState<string | null>(null);
   const [isResultsVisible, setResultsVisible] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isSendingPdf, setIsSendingPdf] = useState(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -26,9 +38,8 @@ export default function Form() {
     if (prompt.length < 3) return;
 
     const body = { prompt };
-    const results = await getRelatedSearch(body);
-    setRelatedResults(results);
-    console.log(results);
+    const res = await getRelatedSearch(body);
+    setRelatedResults(res);
   }, []);
 
   const debouncedSearchRelatedMusic = useMemo(
@@ -55,13 +66,50 @@ export default function Form() {
     e.preventDefault();
   };
 
+  const handleGenerateClick = async (): Promise<void> => {
+    if (!selectedResult) return;
+    try {
+      setIsGeneratingPdf(true);
+      setShowPdfPresentation(true);
+
+      const res = await getPDFTemplate({ albumId: selectedResult.id });
+      setScrapingResult(res);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
+  const handleSendPdf = async (e: any) => {
+    e.preventDefault();
+    if (!scrapingResult) return;
+
+    try {
+      setIsSendingPdf(true);
+      const body = {
+        template: scrapingResult,
+        email: "brandon7.7porcel@gmail.com",
+        albumName: selectedResult ? selectedResult.album : "album",
+      };
+
+      await sendAlbumEmail(body);
+      clearSearch(e);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setScrapingResult(null);
+      setIsSendingPdf(false);
+    }
+  };
+
   const handleClickOutside = (e: any) => {
     if (inputRef.current && !inputRef.current.contains(e.target)) {
       setResultsVisible(false);
     }
   };
 
-  const handleMusicSelection = (result: any) => {
+  const handleMusicSelection = (result: SearchSuggestion) => {
     setSelectedResult(result);
   };
 
@@ -100,12 +148,13 @@ export default function Form() {
             <EraserIcon width={18} height={18} />
           </button>
         </form>
+
         {isResultsVisible && (
           <ul className="max-h-80 overflow-auto m-0">
             {relatedResults.map((r) => {
               return (
                 <SuggestionItem
-                  key={r.result.id}
+                  key={r.id}
                   result={r}
                   onClick={() => {
                     handleMusicSelection(r);
@@ -116,11 +165,32 @@ export default function Form() {
             })}
           </ul>
         )}
-        {selectedResult && false && (
+
+        {showPdfPresentation && <PdfPresentation data={scrapingResult} />}
+
+        {selectedResult && !isGeneratingPdf && (
           <SelectedResult
             data={selectedResult}
-            handleGenerateClick={(selection) => console.log(selection)}
+            handleGenerateClick={handleGenerateClick}
           />
+        )}
+
+        {!isGeneratingPdf && scrapingResult && (
+          <form onSubmit={handleSendPdf}>
+            <div className="grid w-full items-center gap-1.5 mb-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                required={true}
+                placeholder="brandon@gmail.com"
+                onChange={(v) => setEmail(v.target.value)}
+                value={email}
+                type="email"
+              />
+            </div>
+            <Button className="w-full" type="submit" disabled={isSendingPdf}>
+              Send PDF
+            </Button>
+          </form>
         )}
       </div>
     </>
