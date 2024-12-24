@@ -1,6 +1,6 @@
 import React from "react";
-import DropDown from "./drop-down";
 import Image from "next/image";
+import DropDown from "./drop-down";
 
 export default function Profile() {
   return (

@@ -1,10 +1,17 @@
+import { SearchSuggestion } from "@/types";
 import PdfPresentationHeader from "./header";
 import styles from "./styles.module.css";
 
-function PdfPresentation({ data }: { data: string | null }) {
+interface PdfPresentationProps {
+  search: SearchSuggestion | null;
+  data: string | null;
+  onClear: () => void;
+}
+
+function PdfPresentation({ data, onClear, search }: PdfPresentationProps) {
   return (
     <div className="borders isolate flex w-full flex-col flex-nowrap items-stretch gap-3 rounded-xl bg-white dark:bg-zinc-950 px-3 py-3 shadow-md ring-1 ring-gray-200">
-      <PdfPresentationHeader data={data} />
+      <PdfPresentationHeader search={search} data={data} onClear={onClear} />
       <div className="relative aspect-square overflow-hidden max-h-160">
         {!data && (
           <div
