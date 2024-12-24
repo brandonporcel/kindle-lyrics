@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import { Input } from "../ui/input";
 import styles from "./styles.module.css";

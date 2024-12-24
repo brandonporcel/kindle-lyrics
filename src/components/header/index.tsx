@@ -1,8 +1,9 @@
 import Link from "next/link";
-import React from "react";
 import { SparklesIcon } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import Profile from "./profile";
+import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { Button } from "../ui/button";
 
 function Header() {
   return (
@@ -16,7 +17,16 @@ function Header() {
       </Link>
 
       <div className="flex flex-row flex-nowrap items-center gap-x-1.5">
-        <Profile />
+        <SignedOut>
+          <SignInButton>
+            <Button>Sign In</Button>
+          </SignInButton>
+        </SignedOut>
+
+        <SignedIn>
+          <Profile />
+        </SignedIn>
+
         <ThemeToggle />
       </div>
     </header>

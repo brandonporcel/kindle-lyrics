@@ -1,7 +1,7 @@
 "use server";
-import { sendMail } from "@/lib/nodemailer";
-import { parseAlbumTracks, parseSearchResults } from "@/lib/parser.service";
 import axios from "axios";
+import { parseAlbumTracks, parseSearchResults } from "@/lib/parser.service";
+import { sendMailWithPDF } from "@/lib/nodemailer";
 
 const SPOTIFY_API = "https://api.spotify.com/v1";
 
@@ -16,7 +16,6 @@ spotify => buscar albums/artists
 https://api.spotify.com/v1/search?q=bad+bunny&type=album
 
 */
-
 export const getRelatedSearch = async ({ prompt }: { prompt: string }) => {
   const accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
 
@@ -44,7 +43,7 @@ export const getRelatedSearch = async ({ prompt }: { prompt: string }) => {
 
     return parseSearchResults(data.albums.items);
   } catch (error: any) {
-    throw new Error(`Failed to fetch related search: ${error.message}`);
+    throw new Error(error.message || "Unknown error occurred");
   }
 };
 
@@ -78,13 +77,21 @@ export const getPDFTemplate = async (data: { albumId: string }) => {
           `https://api.lyrics.ovh/v1/${track.artist}/${track.name}`
         );
         const lyrics = lyricsResponse.data.lyrics || "Lyrics not available.";
-        template += `<h1>${track.artist} - ${track.name}</h1><p class='pdf-lyrics'>${lyrics}</p>`;
+        template += `
+          <div class="page">
+            <h1>${track.artist} - ${track.name}</h1>
+            <p class='pdf-lyrics'>${lyrics}</p>
+          </div>`;
       } catch (error: any) {
         console.error(
           `Error fetching lyrics for ${track.name}:`,
           error.message
         );
-        template += `<h1>${track.artist} - ${track.name}</h1><p class='pdf-lyrics'>Lyrics not available.</p>`;
+        template += `
+          <div class="page">
+            <h1>${track.artist} - ${track.name}</h1>
+            <p class='pdf-lyrics'>Lyrics not available.</p>
+          </div>`;
       }
     }
 
@@ -105,9 +112,14 @@ const generateHtmlTemplate = (template: string): string => {
         <style>
             body {
                 margin: 0;
+                font-family: Arial, sans-serif;
             }
-            p.pdf-lyrics{
-              white-space:pre-wrap;
+            p.pdf-lyrics {
+              white-space: pre-wrap;
+              margin: 0 0 20px;
+            }
+            .page {
+              page-break-after: always;
             }
         </style>
     </head>
@@ -127,12 +139,17 @@ export const sendAlbumEmail = async ({
   albumName: string;
   template: string;
 }) => {
-  const response = await sendMail({
-    sendTo: email,
-    subject: `Lyrics for ${albumName}`,
-    text: template,
-    html: template,
-  });
+  try {
+    const response = await sendMailWithPDF({
+      to: email,
+      subject: "convert",
+      text: "",
+      pdfContent: template,
+      filename: albumName + ".pdf",
+    });
 
-  return response;
+    return response;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
 };

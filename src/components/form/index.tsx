@@ -1,8 +1,8 @@
 "use client";
 
-import { getRelatedSearch } from "@/actions";
-import { debounce } from "@/lib/utils";
 import { EraserIcon } from "lucide-react";
+import { toast } from "sonner";
+import { getRelatedSearch } from "@/actions";
 import {
   useEffect,
   useState,
@@ -11,6 +11,7 @@ import {
   useRef,
   useMemo,
 } from "react";
+import { debounce } from "@/lib/utils";
 import SuggestionItem from "../suggestion-search";
 import { SearchSuggestion } from "@/types";
 
@@ -22,15 +23,26 @@ export default function Form({ onMusicSelection }: FormProps) {
   const [prompt, setPrompt] = useState("");
   const [relatedResults, setRelatedResults] = useState<SearchSuggestion[]>([]);
   const [isResultsVisible, setResultsVisible] = useState(false);
-
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const searchRelatedMusic = useCallback(async (prompt: string) => {
-    if (prompt.length < 3) return;
+    if (prompt.length < 3) {
+      setRelatedResults([]);
+      return;
+    }
 
     const body = { prompt };
-    const res = await getRelatedSearch(body);
-    setRelatedResults(res);
+    toast.loading("Loading...", { id: "loading" });
+
+    try {
+      const res = await getRelatedSearch(body);
+      setRelatedResults(res);
+    } catch (error: any) {
+      console.log(error);
+      toast.error("Ocurrió un error inesperado. Por favor intenta más tarde.");
+    } finally {
+      toast.dismiss("loading");
+    }
   }, []);
 
   const debouncedSearchRelatedMusic = useMemo(
@@ -79,6 +91,7 @@ export default function Form({ onMusicSelection }: FormProps) {
         autoComplete="off"
       >
         <input
+          autoFocus
           ref={inputRef}
           id="input"
           onChange={handlePrompt}
@@ -100,7 +113,7 @@ export default function Form({ onMusicSelection }: FormProps) {
       </form>
 
       {isResultsVisible && relatedResults.length > 0 && (
-        <ul className="max-h-80 overflow-auto m-0">
+        <ul className="max-h-80 overflow-auto" style={{ marginTop: 4 }}>
           {relatedResults.map((r) => {
             return (
               <SuggestionItem

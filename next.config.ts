@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
         pathname: "**",
         search: "",
       },
+      { hostname: "img.clerk.com" },
     ],
   },
 };
