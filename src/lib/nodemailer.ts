@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import puppeteer from "puppeteer";
 
 const SMTP_SERVER_HOST = process.env.SMTP_SERVER_HOST;
 const SMTP_SERVER_USERNAME = process.env.SMTP_SERVER_USERNAME;
@@ -15,34 +16,51 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export async function sendMail({
-  sendTo,
+export async function sendMailWithPDF({
+  to,
   subject,
   text,
   html,
+  pdfContent,
+  filename,
 }: {
-  sendTo: string;
+  to: string;
   subject: string;
   text: string;
   html?: string;
+  pdfContent: string;
+  filename: string;
 }) {
   try {
-    const isVerified = await transporter.verify();
-    if (!isVerified) {
-      throw new Error("SMTP Server Not Verified");
-    }
-  } catch (error) {
-    console.error("Something Went Wrong", error);
-    return;
+    const pdfBuffer = await generatePDF(pdfContent);
+
+    const info = await transporter.sendMail({
+      from: '"Kindle Lyrics 💿" <brandon7.7porcel@gmail.com>',
+      to,
+      subject,
+      text: text || "",
+      html: html ?? "",
+      attachments: [
+        {
+          filename: filename || "keep-lyrics.pdf",
+          content: pdfBuffer as any,
+        },
+      ],
+    });
+
+    return info;
+  } catch (error: any) {
+    console.error("Error sending mail with PDF:", error.message);
+    throw new Error("Failed to send mail");
   }
-
-  const info = await transporter.sendMail({
-    from: '"Kindle Lyrics 💿" <brandon7.7porcel@gmail.com>',
-    to: sendTo,
-    subject: subject,
-    text: text,
-    html: html ?? "",
-  });
-
-  return info;
 }
+
+export const generatePDF = async (content: string) => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setContent(content);
+  const pdfBuffer = await page.pdf({ format: "A4" });
+  await browser.close();
+
+  return pdfBuffer;
+};

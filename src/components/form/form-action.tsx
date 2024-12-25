@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
+import { toast } from "sonner";
+import confetti from "canvas-confetti";
 import Form from "@/components/form";
 import PdfPresentation from "../pdf-presentation";
-import { getPDFTemplate } from "@/actions";
+import { getPDFTemplate, sendAlbumEmail } from "@/actions";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -11,7 +13,7 @@ import { SearchSuggestion } from "@/types";
 
 export default function FormAction() {
   const [scrapingResult, setScrapingResult] = useState<string | null>(null);
-  const [email, setEmail] = useState<string>("");
+  const [email, setEmail] = useState("");
   const [selectedResult, setSelectedResult] = useState<SearchSuggestion | null>(
     null
   );
@@ -34,17 +36,42 @@ export default function FormAction() {
     }
   };
 
+  const handleSendedAlbum = () => {
+    toast.success("Pdf with lyrics sent correctly!", {
+      position: "top-center",
+    });
+    setScrapingResult(null);
+    setStatus("to-search");
+    setEmail("");
+    setSelectedResult(null);
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+    // actualizar el prompt a '' y darle autofocus
+  };
+
   const handleSendPdf = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!scrapingResult || !email) return;
+
     setIsSendingPdf(true);
     try {
-      if (!scrapingResult || !email) return;
-      alert("PDF sent successfully!");
+      const body = {
+        template: scrapingResult,
+        email,
+        albumName: selectedResult ? selectedResult.album : "album",
+      };
+      toast.loading("Sending PDF...", { id: "sending-pdf" });
+      await sendAlbumEmail(body);
+      handleSendedAlbum();
     } catch (error) {
       console.error("Error sending PDF:", error);
-      alert("Failed to send PDF. Please try again.");
+      toast.error("Failed to send PDF. Please try again.");
     } finally {
       setIsSendingPdf(false);
+      toast.dismiss("sending-pdf");
     }
   };
 
@@ -83,7 +110,7 @@ export default function FormAction() {
             <Label htmlFor="email">Email</Label>
             <Input
               required={true}
-              placeholder="brandon@gmail.com"
+              placeholder="Enter your kindle email..."
               onChange={(v) => setEmail(v.target.value)}
               value={email}
               type="email"

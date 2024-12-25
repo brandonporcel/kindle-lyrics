@@ -10,6 +10,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SignOutButton } from "@clerk/nextjs";
 
 function DropDown({ children }: { children: React.ReactNode }) {
   return (
@@ -24,36 +25,19 @@ function DropDown({ children }: { children: React.ReactNode }) {
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
-
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
             <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <a
-            href="https://github.com/brandonporcel"
-            target="_blank"
-            rel="noopener"
-          >
-            <DropdownMenuItem>
-              <span>GitHub</span>
-            </DropdownMenuItem>
-          </a>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <a href="/api/auth/signout">
+        <SignOutButton>
           <DropdownMenuItem>
             <LogOut className="mr-2 h-4 w-4" />
             <span>Log out</span>
           </DropdownMenuItem>
-        </a>
-        <DropdownMenuSeparator />
-        <a href="/signin">
-          <DropdownMenuItem>
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Sign In</span>
-          </DropdownMenuItem>
-        </a>
+        </SignOutButton>
       </DropdownMenuContent>
     </DropdownMenu>
   );
