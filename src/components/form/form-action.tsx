@@ -24,14 +24,18 @@ export default function FormAction() {
   const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
 
   const handlePdfGeneration = async (albumId: string) => {
-    setIsGeneratingPdf(true);
-    setStatus("pdf-preview");
     try {
+      setIsGeneratingPdf(true);
+      setStatus("pdf-preview");
       const res = await getPDFTemplate({ albumId });
       setScrapingResult(res);
     } catch (error) {
+      toast.error(
+        "An error ocurred while trying to get lyrics. Please try later"
+      );
       console.error("Error generating PDF:", error);
     } finally {
+      setStatus("to-search");
       setIsGeneratingPdf(false);
     }
   };
@@ -49,7 +53,6 @@ export default function FormAction() {
       spread: 70,
       origin: { y: 0.6 },
     });
-    // actualizar el prompt a '' y darle autofocus
   };
 
   const handleSendPdf = async (e: React.FormEvent) => {
