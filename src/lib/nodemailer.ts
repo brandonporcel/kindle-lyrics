@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import puppeteer from "puppeteer";
+import { generatePDF } from "@/actions";
 
 const SMTP_SERVER_HOST = process.env.SMTP_SERVER_HOST;
 const SMTP_SERVER_USERNAME = process.env.SMTP_SERVER_USERNAME;
@@ -32,7 +32,7 @@ export async function sendMailWithPDF({
   filename: string;
 }) {
   try {
-    const pdfBuffer = await generatePDF(pdfContent);
+    const pdfBuffer = await generatePDF({ source: pdfContent });
 
     const info = await transporter.sendMail({
       from: '"Kindle Lyrics 💿" <brandon7.7porcel@gmail.com>',
@@ -54,13 +54,3 @@ export async function sendMailWithPDF({
     throw new Error("Failed to send mail");
   }
 }
-
-export const generatePDF = async (content: string) => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.setContent(content);
-  const pdfBuffer = await page.pdf({ format: "A4" });
-  await browser.close();
-
-  return pdfBuffer;
-};
