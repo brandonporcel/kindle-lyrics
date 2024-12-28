@@ -171,3 +171,27 @@ export const refreshToken = async () => {
     console.error("Error refreshing token:", error.message);
   }
 };
+
+export async function generatePDF(data: { source: string }) {
+  const apiKey = process.env.PDFSHIFT_TOKEN;
+  if (!apiKey) throw new Error("No PDF SHIFT token provided");
+
+  try {
+    const response = await axios.post(
+      "https://api.pdfshift.io/v3/convert/pdf",
+      data,
+      {
+        responseType: "arraybuffer",
+        auth: {
+          username: "api",
+          password: apiKey,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Error generating PDF with PDFShift:", error.message);
+    throw error.message;
+  }
+}
