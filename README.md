@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![Kindle Lyrics Cover](public/og.png)
 
-## Getting Started
+# Kindle Lyrics 🎵
 
-First, run the development server:
+Kindle Lyrics is a website that allows users to send album lyrics in PDF format directly to their Kindle email. Expand your music knowledge and enjoy reading lyrics like never before!
+
+---
+
+## 🚀 Features
+
+- Search for albums while typing, with auto-suggestions.
+- Generate a PDF containing the lyrics of all tracks in an album.
+- Send the generated PDF to your Kindle email.
+
+---
+
+## 📦 Installation
+
+Clone the repository and install the dependencies:
 
 ```bash
+git clone https://github.com/brandonporcel/kindle-lyrics.git
+cd kindle-lyrics
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✅ To-Do List
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [ ] Add tests
+- [ ] Allow users to log in with Spotify and display their liked albums for easy selection and lyric generation.
+- [ ] Add a search filter with the ability to:
+  - Search for specific songs.
+  - Send only the lyrics of a single song.
+  - Suggest the album associated with the selected song.
+- [ ] Add 2th method to get lyrics (https://www.lyricsfreak.com/search.php?q=Smooth+Operator)
+- [ ] Create database to save users and their preferences (liked albums, historial, save kindle mails)
+- [ ] Handle pdf preview
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🤝 Contributions
 
-## Learn More
+Contributions are welcome!
+If you have ideas or improvements, feel free to fork the project and submit a pull request (PR).
 
-To learn more about Next.js, take a look at the following resources:
+## 💬 Feedback
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+I’d love to hear your thoughts and suggestions!
+Reach out to me via:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- 📧 [Email](mailto:brandon7.7porcel@gmail.com)
+- 🌐 [LinkedIn](https://linkedin.com/in/brandonporcel)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+![Kindle Lyrics Preview](public/preview.jpg)
