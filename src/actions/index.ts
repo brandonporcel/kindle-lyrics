@@ -2,28 +2,12 @@
 import axios from "axios";
 import { parseAlbumTracks, parseSearchResults } from "@/lib/parser.service";
 import { sendMailWithPDF } from "@/lib/nodemailer";
+import { getSpotifyAccessToken } from "@/helpers/tokenManager";
 
 const SPOTIFY_API = "https://api.spotify.com/v1";
 
-/*
-lyricsfreak=>lyricsfreak usar endpoint de search para canciones y escrapear la respuesta para buscar el link de la busqueda correcta. si lo encuentra, ir y luego volver a escrapear tal respuesta(lyrics)
-https://www.lyricsfreak.com/search.php?q=Smooth+Operator
---
-ovh => obtener lyrics por artista y cancion
-https://api.lyrics.ovh/v1/smokey%20robinson/quiet%20storm
-
-spotify => buscar albums/artists
-https://api.spotify.com/v1/search?q=bad+bunny&type=album
-
-*/
 export const getRelatedSearch = async ({ prompt }: { prompt: string }) => {
-  const accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
-
-  if (!accessToken) {
-    throw new Error(
-      "Access token is missing. Please set SPOTIFY_ACCESS_TOKEN in your environment variables."
-    );
-  }
+  const accessToken = await getSpotifyAccessToken();
 
   const params = new URLSearchParams({
     type: "album",
@@ -48,19 +32,12 @@ export const getRelatedSearch = async ({ prompt }: { prompt: string }) => {
 };
 
 export const getPDFTemplate = async (data: { albumId: string }) => {
-  const accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
-
-  if (!accessToken) {
-    throw new Error(
-      "Access token is missing. Please set SPOTIFY_ACCESS_TOKEN in your environment variables."
-    );
-  }
-
   const url = `${SPOTIFY_API}/albums/${data.albumId}/tracks`;
+  const token = await getSpotifyAccessToken();
 
   try {
     const response = await axios.get(url, {
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     const albumTracks = response.data?.items;
@@ -144,6 +121,7 @@ export const sendAlbumEmail = async ({
       to: email,
       subject: "convert",
       text: "",
+      html: `<p>${albumName}</p>`,
       pdfContent: template,
       filename: albumName + ".pdf",
     });
@@ -151,5 +129,45 @@ export const sendAlbumEmail = async ({
     return response;
   } catch (error: any) {
     throw new Error(error.message);
+  }
+};
+
+export const refreshToken = async () => {
+  const {
+    SPOTIFY_CLIENT_ID: client_id,
+    SPOTIFY_CLIENT_SECRET: client_secret,
+    SPOTIFY_REFRESH_TOKEN: refresh_token,
+  } = process.env;
+
+  if (!refresh_token) throw new Error("No refresh token provided");
+
+  const authOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Basic ${Buffer.from(
+        `${client_id}:${client_secret}`
+      ).toString("base64")}`,
+    },
+    body: new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token,
+    }),
+  };
+
+  try {
+    const response = await fetch(
+      "https://accounts.spotify.com/api/token",
+      authOptions
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to refresh token. Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error("Error refreshing token:", error.message);
   }
 };
