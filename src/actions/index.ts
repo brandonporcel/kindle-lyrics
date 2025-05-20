@@ -3,6 +3,7 @@ import axios from "axios";
 import { parseAlbumTracks, parseSearchResults } from "@/lib/parser.service";
 import { sendMailWithPDF } from "@/lib/nodemailer";
 import { getSpotifyAccessToken } from "@/helpers/tokenManager";
+import * as cheerio from "cheerio";
 
 const SPOTIFY_API = "https://api.spotify.com/v1";
 
@@ -31,8 +32,35 @@ export const getRelatedSearch = async ({ prompt }: { prompt: string }) => {
   }
 };
 
-export const getPDFTemplate = async (data: { albumId: string }) => {
-  const url = `${SPOTIFY_API}/albums/${data.albumId}/tracks`;
+const fetchLyricsFromLyricsFreak = async (track: {
+  artist: string;
+  name: string;
+}) => {
+  try {
+    const searchUrl = `https://www.lyricsfreak.com/search.php?q=${track.artist}%20${track.name}`;
+    const { data: searchHtml } = await axios.get(searchUrl);
+
+    const $search = cheerio.load(searchHtml);
+    const resultLink = $search(".lf-list__cell.lf-list__meta a").attr("href");
+
+    if (resultLink) {
+      const lyricsPageUrl = `https://www.lyricsfreak.com${resultLink}`;
+      const { data: lyricsHtml } = await axios.get(lyricsPageUrl);
+
+      const $lyrics = cheerio.load(lyricsHtml);
+      const lyricsContent = $lyrics("div#content").html();
+
+      return lyricsContent || "Lyrics not found.";
+    }
+  } catch (err) {
+    console.error(`Failed to fetch lyrics from LyricsFreak: ${err}`);
+  }
+
+  return "Lyrics not found.";
+};
+
+export const getPDFTemplate = async ({ albumId }: { albumId: string }) => {
+  const url = `${SPOTIFY_API}/albums/${albumId}/tracks`;
   const token = await getSpotifyAccessToken();
 
   try {
@@ -41,35 +69,30 @@ export const getPDFTemplate = async (data: { albumId: string }) => {
     });
 
     const albumTracks = response.data?.items;
-    if (!albumTracks || albumTracks.length === 0) {
-      throw new Error(`The album does not contain any tracks.`);
+    if (!albumTracks?.length) {
+      throw new Error("The album does not contain any tracks.");
     }
 
     const tracks = parseAlbumTracks(albumTracks);
     let template = "";
-
+    console.log("tracks", tracks);
     for (const track of tracks) {
+      let lyrics = "Lyrics not available.";
+
       try {
-        const lyricsResponse = await axios.get(
+        const { data } = await axios.get(
           `https://api.lyrics.ovh/v1/${track.artist}/${track.name}`
         );
-        const lyrics = lyricsResponse.data.lyrics || "Lyrics not available.";
-        template += `
-          <div class="page">
-            <h1>${track.artist} - ${track.name}</h1>
-            <p class='pdf-lyrics'>${lyrics}</p>
-          </div>`;
-      } catch (error: any) {
-        console.error(
-          `Error fetching lyrics for ${track.name}:`,
-          error.message
-        );
-        template += `
-          <div class="page">
-            <h1>${track.artist} - ${track.name}</h1>
-            <p class='pdf-lyrics'>Lyrics not available.</p>
-          </div>`;
+        lyrics = data.lyrics || lyrics;
+      } catch {
+        lyrics = await fetchLyricsFromLyricsFreak(track);
       }
+
+      template += `
+        <div class="page">
+          <h1>${track.artist} - ${track.name}</h1>
+          <p class='pdf-lyrics'>${lyrics}</p>
+        </div>`;
     }
 
     return generateHtmlTemplate(template);
