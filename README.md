@@ -27,15 +27,18 @@ npm run dev
 
 ## ✅ To-Do List
 
+- [x] Add 2th method to get lyrics (https://www.lyricsfreak.com/search.php?q=Smooth+Operator)
+- [ ] Add 3th method to get lyrics (https://genius.com/search)
+  - Add anotations to the lyrics
+  - Docker
+- [ ] Implement deepl for translations
+- [ ] Handle pdf download
 - [ ] Add tests
 - [ ] Allow users to log in with Spotify and display their liked albums for easy selection and lyric generation.
 - [ ] Add a search filter with the ability to:
-  - Search for specific songs.
-  - Send only the lyrics of a single song.
-  - Suggest the album associated with the selected song.
-- [ ] Add 2th method to get lyrics (https://www.lyricsfreak.com/search.php?q=Smooth+Operator)
+  - Search only songs and not albums.
+    - After successfully sending the e-mail, suggest the album associated with the selected song.
 - [ ] Create database to save users and their preferences (liked albums, historial, save kindle mails)
-- [ ] Handle pdf preview
 
 ## 🤝 Contributions
 
