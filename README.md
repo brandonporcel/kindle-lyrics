@@ -28,9 +28,10 @@ npm run dev
 ## ✅ To-Do List
 
 - [x] Add 2th method to get lyrics (https://www.lyricsfreak.com/search.php?q=Smooth+Operator)
-- [ ] Add 3th method to get lyrics (https://genius.com/search)
-  - Add anotations to the lyrics
-  - Docker
+- [ ] Add 3th method to get lyrics. [(genius-scrapper)](https://github.com/brandonporcel/genius-scrapper)
+  - [x] Docker
+  - [ ] Add anotations to the lyrics
+  - [ ] Search another hosting to make fast scrappings. Now it is in render
 - [ ] Implement deepl for translations
 - [ ] Handle pdf download
 - [ ] Add tests
