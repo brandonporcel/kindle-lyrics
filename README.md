@@ -36,14 +36,16 @@ Follow these steps to obtain and configure your keys:
 2. Create a new project inside Klerk.
 3. In the project settings, you’ll find your **API Key** and **Secret**.
 4. Copy them into a .env file in the root of your project:
-   `bash
-KLERK_API_KEY=your_api_key_here
-KLERK_API_SECRET=your_api_secret_here
-`
+
+   ```bash
+   KLERK_API_KEY=your_api_key_here
+   KLERK_API_SECRET=your_api_secret_here
+   ```
+
 5. Restart your development server:
-   `bash
-npm run dev
-`
+   ```bash
+   npm run dev
+   ```
 
 ## ✅ To-Do List
 
