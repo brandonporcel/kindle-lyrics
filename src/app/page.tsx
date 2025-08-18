@@ -5,7 +5,7 @@ import Historial from "@/components/historial";
 export default function Home() {
   return (
     <main>
-      <section className="flex flex-col items-center justify-center py-[15vh] sm:py-[20vh]">
+      <section className="flex flex-col items-center justify-center py-[15vh] sm:py-[20vh] px-4 sm:px-0">
         <h1 className="mb-3 text-4xl font-medium duration-1000 ease-in-out animate-in fade-in slide-in-from-bottom-3">
           Generate PDF with lyrics to your kindle
         </h1>
