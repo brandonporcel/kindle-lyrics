@@ -2,15 +2,17 @@
 
 # Kindle Lyrics 🎵
 
-Kindle Lyrics is a website that allows users to send album lyrics in PDF format directly to their Kindle email. Expand your music knowledge and enjoy reading lyrics like never before!
+**Kindle Lyrics** is a website that allows users to generate a PDF with full album lyrics and send it directly to their **Kindle email**.  
+Expand your music knowledge and enjoy reading lyrics on your Kindle like never before! 📖✨
 
 ---
 
 ## 🚀 Features
 
-- Search for albums while typing, with auto-suggestions.
-- Generate a PDF containing the lyrics of all tracks in an album.
-- Send the generated PDF to your Kindle email.
+- 🔍 **Smart search**: search for albums with real-time suggestions.
+- 📑 **PDF generation**: create a single PDF with all the lyrics from an album.
+- 📤 **Send to Kindle**: automatically deliver the generated PDF to your Kindle email.
+- 🌍 Future plans: add translations, Spotify integration, user preferences, and more!
 
 ---
 
@@ -24,6 +26,24 @@ cd kindle-lyrics
 npm install
 npm run dev
 ```
+
+## 🔑 Setup: Getting your Klerk API Keys
+
+This project uses Klerk to send emails to Kindle.
+Follow these steps to obtain and configure your keys:
+
+1. Go to [Klerk Dashboard](https://dashboard.clerk.com/) and create a free account.
+2. Create a new project inside Klerk.
+3. In the project settings, you’ll find your **API Key** and **Secret**.
+4. Copy them into a .env file in the root of your project:
+   `bash
+KLERK_API_KEY=your_api_key_here
+KLERK_API_SECRET=your_api_secret_here
+`
+5. Restart your development server:
+   `bash
+npm run dev
+`
 
 ## ✅ To-Do List
 

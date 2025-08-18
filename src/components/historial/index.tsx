@@ -43,15 +43,10 @@ function Historial() {
                 width={768}
                 height={768}
                 alt="ai generated emoji"
-                className="aspect-square w-full"
+                className="aspect-square w-full rounded-xl"
                 src="https://aaah0mnbncqtinas.public.blob.vercel-storage.com/TR8rvUKXr5-no-background-73jDXghtn8dsHdWik1rVH1JUFyj9Zx.png"
                 loading="lazy"
               />
-              <span className="sr-only">Red Supreme bag</span>
-              <a
-                className="absolute inset-0 rounded-xl bg-black/[0.05] opacity-0 transition-opacity duration-200 ease-out hover:opacity-100 focus:opacity-100"
-                href="/p/TR8rvUKXr5"
-              ></a>
               <div
                 aria-hidden="true"
                 className="absolute inset-0 aspect-square overflow-hidden rounded-xl bg-white transition-opacity duration-200 ease-out z-10 opacity-100"
