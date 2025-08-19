@@ -1,27 +1,20 @@
 import React from "react";
+import AppLink from "../ui/link";
 
 function Footer() {
   return (
     <div className="border-grid border-t md:px-8 py-4">
       <div className="text-balance text-center text-sm leading-loose text-muted-foreground md:text-left">
         Built by{" "}
-        <a
+        <AppLink
+          text="brandonporcel"
           href={"https://linkedin.com/in/brandonporcel"}
-          target="_blank"
-          rel="noreferrer"
-          className="font-medium underline underline-offset-4"
-        >
-          brandonporcel
-        </a>
+        />
         . The source code is available on{" "}
-        <a
+        <AppLink
+          text="GitHub"
           href={"https://github.com/brandonporcel/kindle-lyrics"}
-          target="_blank"
-          rel="noreferrer"
-          className="font-medium underline underline-offset-4"
-        >
-          GitHub
-        </a>
+        />
         .
       </div>
     </div>
