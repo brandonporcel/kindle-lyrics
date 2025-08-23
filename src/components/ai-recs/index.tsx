@@ -26,7 +26,7 @@ function AIRecs({ onMusicSelection, reloadRecs }: AIRecsProps) {
   };
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2 absolute justify-center w-full left-0">
       {pending ? (
         <>
           {[1, 2, 3].map((_, index) => (

@@ -1,4 +1,5 @@
 "use client";
+
 import Form from "@/components/form";
 import PdfPresentation from "../pdf-presentation";
 import { Label } from "../ui/label";
@@ -23,8 +24,9 @@ export default function FormAction() {
   } = useFormAction();
 
   return (
-    <div className="w-full max-w-md space-y-2 duration-1200 ease-in-out animate-in fade-in slide-in-from-bottom-4">
+    <div className="w-full max-w-lg space-y-2 duration-1200 ease-in-out animate-in fade-in slide-in-from-bottom-4">
       <Form onMusicSelection={handleMusicSelection} />
+
       {selectedResult && !isGeneratingPdf && status !== "pdf-preview" && (
         <SelectedResult
           data={selectedResult}

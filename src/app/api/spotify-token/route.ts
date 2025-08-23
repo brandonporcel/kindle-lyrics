@@ -1,3 +1,7 @@
+// Este endpoint es el que realmente pide un token nuevo a Spotify
+// usando Client Credentials Flow. Lo cachea en memoria (Node) para no
+// pedir uno cada request.
+
 import axios from "axios";
 
 const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
@@ -8,12 +12,16 @@ let cachedToken: { access_token: string; expires_at: number } | null = null;
 export async function GET() {
   try {
     const now = Math.floor(Date.now() / 1000);
+
+    // Si el token todavía es válido → devolvemos cache
     if (cachedToken && cachedToken.expires_at > now) {
       return Response.json({ access_token: cachedToken.access_token });
     }
 
+    // Caso contrario → pedimos uno nuevo
     const params = new URLSearchParams();
     params.append("grant_type", "client_credentials");
+
     const auth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString(
       "base64"
     );
