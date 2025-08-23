@@ -1,3 +1,5 @@
+"use client";
+
 import {
   BanIcon,
   DownloadIcon,
@@ -5,7 +7,7 @@ import {
   HeartIcon,
   LoaderCircleIcon,
 } from "lucide-react";
-import { SearchSuggestion } from "@/types";
+import type { SearchSuggestion } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +30,7 @@ function PdfPresentationHeader({
 }: PdfPresentationHeaderProps) {
   return (
     <div className="relative flex flex-row flex-nowrap items-center">
-      <p className="truncate font-mono sm:text-sm" title="cat">
+      <p className="truncate font-mono text-sm text-white/90" title="lyrics">
         {search ? `${search.album} - ${search.artist}` : "lyrics"}
       </p>
       <span className="inline-block w-full flex-1"></span>
@@ -36,10 +38,9 @@ function PdfPresentationHeader({
         aria-hidden="false"
         className="flex flex-row flex-nowrap items-center gap-2 transition-opacity duration-200 ease-out opacity-100"
       >
-        <button className="group relative inline-flex flex-shrink-0 items-center justify-center select-none truncate transition duration-200 ease-out disabled:pointer-events-auto disabled:opacity-50 shadow ring-1 ring-gray-200 hover:bg-gray-200 dark:ring-gray-600 dark:hover:bg-gray-800 px-2.5 sm:px-2 py-2 h-9 sm:h-8 sm:text-sm rounded-lg font-medium">
+        <button className="group relative inline-flex flex-shrink-0 items-center justify-center select-none truncate transition-all duration-200 ease-out disabled:pointer-events-auto disabled:opacity-50 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-sm px-2.5 py-2 h-9 text-sm rounded-lg font-medium">
           <span className="sr-only">Save album</span>
           <HeartIcon size={16} className="text-red-500 fill-red-500" />
-          {/* todo-make logic to btn actions and make work this loader */}
           {false && (
             <span
               aria-hidden="true"
@@ -50,16 +51,11 @@ function PdfPresentationHeader({
           )}
         </button>
         <button
-          className="group relative inline-flex flex-shrink-0 items-center justify-center truncate transition duration-200 ease-out disabled:pointer-events-auto disabled:opacity-50 shadow ring-1 ring-gray-200 hover:bg-gray-200 dark:ring-gray-600 dark:hover:bg-gray-800 px-2.5 sm:px-2 py-2 h-9 sm:h-8 sm:text-sm rounded-lg font-medium input-focus-ring select-none"
+          className="group relative inline-flex flex-shrink-0 items-center justify-center truncate transition-all duration-200 ease-out disabled:pointer-events-auto disabled:opacity-50 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-sm px-2.5 py-2 h-9 text-sm rounded-lg font-medium select-none text-white/80 hover:text-white"
           type="button"
-          id="radix-:r3k:"
-          aria-haspopup="menu"
-          aria-expanded="false"
-          data-state="closed"
         >
-          <span className="sr-only">Share</span>
+          <span className="sr-only">Download</span>
           <DownloadIcon size={16} />
-
           {false && (
             <span
               aria-hidden="true"
@@ -72,12 +68,8 @@ function PdfPresentationHeader({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="group relative inline-flex flex-shrink-0 items-center justify-center truncate transition duration-200 ease-out disabled:pointer-events-auto disabled:opacity-50 shadow ring-1 ring-gray-200 hover:bg-gray-200 dark:ring-gray-600 dark:hover:bg-gray-800 px-2.5 sm:px-2 py-2 h-9 sm:h-8 sm:text-sm rounded-lg font-medium input-focus-ring select-none"
+              className="group relative inline-flex flex-shrink-0 items-center justify-center truncate transition-all duration-200 ease-out disabled:pointer-events-auto disabled:opacity-50 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 backdrop-blur-sm px-2.5 py-2 h-9 text-sm rounded-lg font-medium select-none text-white/80 hover:text-white"
               type="button"
-              id="radix-:r3m:"
-              aria-haspopup="menu"
-              aria-expanded="false"
-              data-state="closed"
             >
               <span className="sr-only">More options</span>
               <EllipsisIcon size={16} />
@@ -91,18 +83,22 @@ function PdfPresentationHeader({
               )}
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>More options</DropdownMenuLabel>
-            <DropdownMenuSeparator />
+          <DropdownMenuContent className="w-56 bg-gray-900/95 backdrop-blur-sm border-white/10">
+            <DropdownMenuLabel className="text-white/90">
+              More options
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-white/10" />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={onClear}>
+              <DropdownMenuItem
+                onClick={onClear}
+                className="text-white/80 hover:text-white hover:bg-white/10"
+              >
                 <BanIcon />
                 <span>Cancel PDF</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-        {/*  */}
       </div>
     </div>
   );

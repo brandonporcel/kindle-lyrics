@@ -1,8 +1,8 @@
 import Link from "next/link";
+import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { SparklesIcon } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import Profile from "./profile";
-import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 
 function Header() {

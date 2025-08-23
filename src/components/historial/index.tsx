@@ -1,66 +1,53 @@
-import Image from "next/image";
-import { Input } from "../ui/input";
-import styles from "./styles.module.css";
+import { Input } from "@/components/ui/input";
 
 function Historial() {
-  const elems: any[] = [
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-    { image: "1" },
-  ];
+  const recentPdfs = Array.from({ length: 12 }, (_, i) => ({
+    id: i + 1,
+    title: `PDF ${i + 1}`,
+    artist: "Artist Name",
+    date: "2024-01-15",
+  }));
 
   return (
-    <div className="duration-1200 ease-in-out animate-in fade-in slide-in-from-bottom-4">
-      <div className="mb-4 flex flex-col flex-nowrap items-center justify-between gap-2 sm:flex-row sm:justify-center">
-        <h2 className="w-full text-left text-2xl font-semibold">Recent pdf</h2>
-        <div className="relative w-full rounded-lg sm:max-w-[260px]">
-          <Input placeholder="Search..." type="text" />
+    <section className="py-12">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-4 flex flex-col flex-nowrap items-center justify-between gap-2 sm:flex-row sm:justify-center">
+          <h2 className="w-full text-left text-2xl font-semibold">
+            Recent pdf
+          </h2>
+          <div className="relative w-full rounded-lg sm:max-w-[260px]">
+            <Input placeholder="Search..." type="text" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          {recentPdfs.map((pdf) => (
+            <div
+              key={pdf.id}
+              className="aspect-[3/4] bg-card border-border hover:bg-accent/50 transition-colors cursor-pointer relative overflow-hidden "
+            >
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-gray-200/80 to-gray-300/90 dark:from-gray-800/80 dark:to-gray-900/90 backdrop-blur-sm">
+                <div className="h-full w-full relative overflow-hidden">
+                  <div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"
+                    style={{
+                      animation: "shimmer 2s infinite linear",
+                      backgroundSize: "200% 100%",
+                      transform: "translateX(-100%)",
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="flex h-full items-center justify-center">
+                <div className="text-center text-card-foreground/50">
+                  <div className="text-sm font-medium">PDF {pdf.id}</div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-      <ul className="grid w-full auto-rows-fr grid-cols-3 justify-items-stretch gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
-        {elems.map((elem, i) => {
-          return (
-            <li
-              key={i}
-              className="group relative isolate flex select-none flex-col flex-nowrap items-center gap-1.5 overflow-hidden"
-            >
-              <Image
-                width={768}
-                height={768}
-                alt="ai generated emoji"
-                className="aspect-square w-full rounded-xl"
-                src="https://aaah0mnbncqtinas.public.blob.vercel-storage.com/TR8rvUKXr5-no-background-73jDXghtn8dsHdWik1rVH1JUFyj9Zx.png"
-                loading="lazy"
-              />
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 aspect-square overflow-hidden rounded-xl bg-white transition-opacity duration-200 ease-out z-10 opacity-100"
-              >
-                <div
-                  className={`skeleton h-full w-full bg-gray-200 relative ${styles.animate}`}
-                ></div>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    </section>
   );
 }
-
 export default Historial;

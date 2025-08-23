@@ -1,6 +1,6 @@
 "use client";
 
-import { EraserIcon } from "lucide-react";
+import { EraserIcon, SearchIcon } from "lucide-react";
 import { toast } from "sonner";
 import { getRelatedSearch } from "@/actions";
 import {
@@ -23,6 +23,8 @@ export default function Form({ onMusicSelection }: FormProps) {
   const [prompt, setPrompt] = useState("");
   const [relatedResults, setRelatedResults] = useState<SearchSuggestion[]>([]);
   const [isResultsVisible, setResultsVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const searchRelatedMusic = useCallback(async (prompt: string) => {
@@ -46,7 +48,7 @@ export default function Form({ onMusicSelection }: FormProps) {
   }, []);
 
   const debouncedSearchRelatedMusic = useMemo(
-    () => debounce(searchRelatedMusic, 500),
+    () => debounce(searchRelatedMusic, 600),
     [searchRelatedMusic]
   );
 
@@ -87,7 +89,9 @@ export default function Form({ onMusicSelection }: FormProps) {
     <>
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="flex h-fit w-full flex-row items-center rounded-xl bg-black px-1 shadow-lg"
+        className={`flex h-fit w-full flex-row items-center rounded-xl bg-black px-1 shadow-lg transition-all duration-300 border  ${
+          isFocused ? "border-white/20 shadow-xl" : "border-transparent"
+        }`}
         autoComplete="off"
       >
         <input
@@ -101,19 +105,31 @@ export default function Form({ onMusicSelection }: FormProps) {
           className="h-10 w-full resize-none bg-transparent px-2 font-mono text-base text-white placeholder:text-gray-400 sm:text-sm border-0 outline-none ring-0 focus:ring-0 transition-all duration-300"
           name="prompt"
           onClick={() => setResultsVisible(true)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
-
-        <button
-          type="button"
-          onClick={(e) => clearSearch(e)}
-          className="flex aspect-square h-8 w-8 items-center justify-center rounded-lg text-white outline-0 ring-0 hover:bg-white/25 focus-visible:bg-white/25"
-        >
-          <EraserIcon width={18} height={18} />
-        </button>
+        {!prompt && (
+          <div className="flex aspect-square h-8 w-8 items-center justify-center rounded-lg text-gray-400 ml-1">
+            <SearchIcon width={18} height={18} />
+          </div>
+        )}
+        {prompt && (
+          <button
+            type="button"
+            onClick={(e) => clearSearch(e)}
+            className="flex aspect-square h-8 w-8 items-center justify-center rounded-lg text-white outline-0 ring-0 hover:bg-white/10 cursor-default"
+          >
+            <EraserIcon width={18} height={18} />
+          </button>
+        )}
       </form>
 
       {isResultsVisible && relatedResults.length > 0 && (
-        <ul className="max-h-80 overflow-auto" style={{ marginTop: 4 }}>
+        <ul
+          className="max-h-80 overflow-auto rounded-lg bg-black/80 backdrop-blur-sm border border-white/10 mt-2"
+          // Can't remove ul default margin
+          style={{ marginTop: 4 }}
+        >
           {relatedResults.map((r) => {
             return (
               <SuggestionItem

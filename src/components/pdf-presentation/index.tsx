@@ -1,7 +1,5 @@
-import { SearchSuggestion } from "@/types";
+import type { SearchSuggestion } from "@/types";
 import PdfPresentationHeader from "./header";
-import styles from "./styles.module.css";
-
 interface PdfPresentationProps {
   search: SearchSuggestion | null;
   data: string | null;
@@ -10,18 +8,21 @@ interface PdfPresentationProps {
 
 function PdfPresentation({ data, onClear, search }: PdfPresentationProps) {
   return (
-    <div className="borders isolate flex w-full flex-col flex-nowrap items-stretch gap-3 rounded-xl bg-white dark:bg-zinc-950 px-3 py-3 shadow-md ring-1 ring-gray-200">
+    <div className="isolate flex w-full flex-col flex-nowrap items-stretch gap-4 rounded-2xl bg-gray-900/50 backdrop-blur-sm border border-white/10 px-4 py-4 shadow-2xl">
       <PdfPresentationHeader search={search} data={data} onClear={onClear} />
-      <div className="relative aspect-square overflow-hidden max-h-160">
+      <div className="relative aspect-square overflow-hidden max-h-160 rounded-xl border border-white/5">
         {!data && (
-          <div
-            className={`skeleton h-full w-full bg-gray-200 absolute inset-0 ${styles.animate}`}
-          ></div>
+          <div className="h-full w-full bg-gradient-to-br from-gray-800/50 to-gray-900/50 absolute inset-0 animate-pulse">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full"></div>
+          </div>
         )}
         {data && (
-          <div className="relative h-full">
-            <div dangerouslySetInnerHTML={{ __html: data }}></div>
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white dark:to-black opacity-1 pointer-events-none"></div>
+          <div className="relative h-full bg-white/5 backdrop-blur-sm">
+            <div
+              className="p-4 text-white/90 text-sm leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: data }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-900/80 pointer-events-none"></div>
           </div>
         )}
       </div>
