@@ -4,6 +4,7 @@ import { parseAlbumTracks, parseSearchResults } from "@/lib/parser.service";
 import { sendMailWithPDF } from "@/lib/nodemailer";
 import { getSpotifyAccessToken } from "@/helpers/tokenManager";
 import * as cheerio from "cheerio";
+import { SearchSuggestion } from "@/types";
 
 const SPOTIFY_API = "https://api.spotify.com/v1";
 
@@ -75,7 +76,6 @@ export const getPDFTemplate = async ({ albumId }: { albumId: string }) => {
 
     const tracks = parseAlbumTracks(albumTracks);
     let template = "";
-    console.log("tracks", tracks);
     for (const track of tracks) {
       let lyrics = "Lyrics not available.";
 
@@ -218,3 +218,28 @@ export async function generatePDF(data: { source: string }) {
     throw error.message;
   }
 }
+
+export const getAIRecommendations = async () => {
+  try {
+    const { data } = await axios.get(
+      "https://rich-music.vercel.app/api/randomLimit/3"
+    );
+
+    return data.map(
+      (item: any): SearchSuggestion => ({
+        id: item.id,
+        artist: item.artist || item.name,
+        album: item.name,
+        img: {
+          medium: item.thumbnail,
+          small: item.thumbnail,
+          large: item.thumbnail,
+        },
+        type: "album" as const,
+      })
+    );
+  } catch (error) {
+    console.error("Failed to fetch AI recommendations:", error);
+    return [];
+  }
+};

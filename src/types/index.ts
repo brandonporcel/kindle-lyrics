@@ -8,9 +8,9 @@ export interface SearchSuggestion {
   id: string;
   artist: string;
   album: string;
-  date: string;
   img: SearchResultImage;
   type: "album" | "artist";
+  date?: string;
 }
 
 export interface AlbumTrack {

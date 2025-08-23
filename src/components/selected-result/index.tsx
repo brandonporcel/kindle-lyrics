@@ -15,13 +15,13 @@ function SelectedResult(props: SelectedResultProps) {
   const { data, handleGenerateClick } = props;
 
   return (
-    <div className="w-full max-w-md bg-gray-900/50 backdrop-blur-sm border border-gray-800/50 rounded-2xl shadow-2xl py-6 px-6 m-auto transition-all duration-300 hover:bg-gray-900/70 hover:border-gray-700/50">
+    <div className="w-full max-w-md bg-gray-900/50 backdrop-blur-sm border border-gray-800/50 rounded-2xl shadow-2xl py-6 px-6 m-auto transition-all duration-300 hover:bg-gray-900/70 hover:border-gray-700/50 group">
       <div className="flex flex-col items-center text-center space-y-4">
         <div className="relative">
           <Image
             width={96}
             height={96}
-            className="w-24 h-24 rounded-2xl shadow-xl border-2 border-gray-700/50"
+            className="w-24 h-24 rounded-2xl shadow-xl border-2 border-gray-700/50 group-hover:scale-105 transition-transform"
             src={data.img.medium || "/placeholder.svg"}
             alt={`${data.album} cover`}
           />

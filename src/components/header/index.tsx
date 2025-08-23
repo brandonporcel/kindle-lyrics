@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
-import { SparklesIcon } from "lucide-react";
+import { Library } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import Profile from "./profile";
 import { Button } from "../ui/button";
@@ -12,7 +12,7 @@ function Header() {
         className="flex flex-row flex-nowrap items-center justify-center gap-x-1.5 rounded-lg pr-1.5 text-lg font-medium leading-none"
         href="/"
       >
-        <SparklesIcon size={18} />
+        <Library size={18} />
         <span>Kindle Lyrics</span>
       </Link>
 

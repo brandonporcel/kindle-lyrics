@@ -1,6 +1,6 @@
 "use client";
 
-import { EraserIcon, SearchIcon } from "lucide-react";
+import { EraserIcon, SearchIcon, SparklesIcon } from "lucide-react";
 import { toast } from "sonner";
 import { getRelatedSearch } from "@/actions";
 import {
@@ -14,6 +14,7 @@ import {
 import { debounce } from "@/lib/utils";
 import SuggestionItem from "../suggestion-search";
 import { SearchSuggestion } from "@/types";
+import AIRecs from "../ai-recs";
 
 interface FormProps {
   onMusicSelection: (result: SearchSuggestion) => void;
@@ -24,6 +25,7 @@ export default function Form({ onMusicSelection }: FormProps) {
   const [relatedResults, setRelatedResults] = useState<SearchSuggestion[]>([]);
   const [isResultsVisible, setResultsVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [reloadCount, setReloadCount] = useState(0);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -73,9 +75,16 @@ export default function Form({ onMusicSelection }: FormProps) {
     }
   };
 
-  const handleMusicSelection = (result: SearchSuggestion) => {
+  const handleMusicSelection = (result: SearchSuggestion, isAI = false) => {
+    if (isAI) {
+      setPrompt(result.album === prompt ? "" : result.album);
+    }
     onMusicSelection(result);
     setResultsVisible(false);
+  };
+
+  const reloadRecs = () => {
+    setReloadCount((prev) => prev + 1);
   };
 
   useEffect(() => {
@@ -122,7 +131,19 @@ export default function Form({ onMusicSelection }: FormProps) {
             <EraserIcon width={18} height={18} />
           </button>
         )}
+        <button
+          type="button"
+          onClick={reloadRecs}
+          className="flex aspect-square h-8 w-8 items-center justify-center rounded-lg text-white outline-0 ring-0 hover:bg-white/10 cursor-default"
+        >
+          <SparklesIcon width={18} height={18} />
+        </button>
       </form>
+
+      <AIRecs
+        reloadRecs={reloadCount}
+        onMusicSelection={(result) => handleMusicSelection(result, true)}
+      />
 
       {isResultsVisible && relatedResults.length > 0 && (
         <ul

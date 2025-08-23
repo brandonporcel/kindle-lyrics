@@ -84,14 +84,17 @@ export default function FormAction() {
     setSelectedResult(null);
   };
 
-  const handleMusicSelection = (result: any) => {
-    setSelectedResult(result);
+  const handleMusicSelection = (newSelectedResult: SearchSuggestion) => {
+    if (newSelectedResult.album === selectedResult?.album) {
+      setSelectedResult(null);
+      return;
+    }
+    setSelectedResult(newSelectedResult);
   };
 
   return (
-    <div className="w-full max-w-md space-y-4 duration-1200 ease-in-out animate-in fade-in slide-in-from-bottom-4 mb-4">
+    <div className="w-full max-w-md space-y-2 duration-1200 ease-in-out animate-in fade-in slide-in-from-bottom-4">
       <Form onMusicSelection={handleMusicSelection} />
-
       {selectedResult && !isGeneratingPdf && status !== "pdf-preview" && (
         <SelectedResult
           data={selectedResult}

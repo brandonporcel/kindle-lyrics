@@ -21,3 +21,7 @@ export function debounce<T extends (...args: any[]) => void>(
     }, delay);
   };
 }
+
+export const onErrorImage = () => {
+  return "https://images.squarespace-cdn.com/content/v1/5d2e2c5ef24531000113c2a4/1564770283101-36J6KM8EIK71FOCGGDM2/album-placeholder.png?format=1000w";
+};
