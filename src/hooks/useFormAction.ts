@@ -3,18 +3,17 @@ import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { getPDFTemplate, sendAlbumEmail } from "@/actions";
 import { SearchSuggestion } from "@/types";
-
-type Status = "to-search" | "pdf-preview";
+import useFormActionStore from "@/stores/form-action.store";
 
 function useFormAction() {
+  const { isGeneratingPdf, setIsGeneratingPdf, status, setStatus } =
+    useFormActionStore();
   const [scrapingResult, setScrapingResult] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [selectedResult, setSelectedResult] = useState<SearchSuggestion | null>(
     null
   );
-  const [status, setStatus] = useState<Status>("to-search");
   const [isSendingPdf, setIsSendingPdf] = useState(false);
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   const handlePdfGeneration = async (albumId: string) => {
     try {
@@ -27,9 +26,9 @@ function useFormAction() {
         "An error ocurred while trying to get lyrics. Please try later"
       );
       console.error("Error generating PDF:", error);
-      // 👇 revertir estado si falla
       setStatus("to-search");
     } finally {
+      console.log("termino?");
       setIsGeneratingPdf(false);
     }
   };

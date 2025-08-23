@@ -1,6 +1,10 @@
 "use server";
 import axios from "axios";
-import { parseAlbumTracks, parseSearchResults } from "@/lib/parser.service";
+import {
+  cleanTrackName,
+  parseAlbumTracks,
+  parseSearchResults,
+} from "@/lib/parser.service";
 import { sendMailWithPDF } from "@/lib/nodemailer";
 import { getSpotifyAccessToken } from "@/helpers/tokenManager";
 import * as cheerio from "cheerio";
@@ -38,8 +42,12 @@ const fetchLyricsFromLyricsFreak = async (track: {
   name: string;
 }) => {
   try {
-    const searchUrl = `https://www.lyricsfreak.com/search.php?q=${track.artist}%20${track.name}`;
-    const { data: searchHtml } = await axios.get(searchUrl);
+    const cleanName = cleanTrackName(track.name);
+    const artist = encodeURIComponent(track.artist);
+    const name = encodeURIComponent(cleanName);
+    const LYRICS_FREAK_URL = `https://www.lyricsfreak.com/search.php?q=${artist}%20${name}`;
+
+    const { data: searchHtml } = await axios.get(LYRICS_FREAK_URL);
 
     const $search = cheerio.load(searchHtml);
     const resultLink = $search(".lf-list__cell.lf-list__meta a").attr("href");
@@ -80,9 +88,11 @@ export const getPDFTemplate = async ({ albumId }: { albumId: string }) => {
       let lyrics = "Lyrics not available.";
 
       try {
-        const { data } = await axios.get(
-          `https://api.lyrics.ovh/v1/${track.artist}/${track.name}`
-        );
+        const OVH_URL = `https://api.lyrics.ovh/v1/${track.artist}/${track.name}`;
+        const { data } = await axios.get(OVH_URL, {
+          timeout: 4000,
+        });
+
         lyrics = data.lyrics || lyrics;
       } catch {
         lyrics = await fetchLyricsFromLyricsFreak(track);
@@ -227,7 +237,7 @@ export const getAIRecommendations = async () => {
 
     return data.map(
       (item: any): SearchSuggestion => ({
-        id: item.id,
+        id: item._id,
         artist: item.artist || item.name,
         album: item.name,
         img: {

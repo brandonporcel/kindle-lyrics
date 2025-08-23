@@ -15,7 +15,10 @@ function SelectedResult(props: SelectedResultProps) {
   const { data, handleGenerateClick } = props;
 
   return (
-    <div className="w-full max-w-md bg-gray-900/50 backdrop-blur-sm border border-gray-800/50 rounded-2xl shadow-2xl py-6 px-6 m-auto transition-all duration-300 hover:bg-gray-900/70 hover:border-gray-700/50 group">
+    <div
+      className="w-full max-w-md bg-gray-900/50 backdrop-blur-sm border border-gray-800/50 rounded-2xl shadow-2xl py-6 px-6 m-auto transition-all duration-300 hover:bg-gray-900/70 hover:border-gray-700/50 group"
+      style={{ marginTop: 48 }}
+    >
       <div className="flex flex-col items-center text-center space-y-4">
         <div className="relative">
           <Image

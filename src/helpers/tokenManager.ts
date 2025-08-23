@@ -19,6 +19,7 @@ export const getSpotifyAccessToken = async () => {
 
     const { updatedAt, token } = JSON.parse(storedData);
 
+    // Spotify tokens duran 3600s = 1h → uso margen de 45min
     if (Date.now() - updatedAt > 2700000) {
       const newToken = await refreshToken();
       localStorage.setItem(
@@ -31,6 +32,7 @@ export const getSpotifyAccessToken = async () => {
     return token;
   }
 
+  // Si no hay token o expiró, lo pide al backend
   try {
     const url = "/api/spotify-token";
     const { data } = await axiosInstance.get(url);

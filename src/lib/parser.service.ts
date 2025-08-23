@@ -1,5 +1,3 @@
-// import { SearchResult } from "@/types";
-
 import { AlbumTrack, SearchSuggestion } from "@/types";
 
 export const parseSearchResults = (data: any[]): SearchSuggestion[] => {
@@ -32,3 +30,7 @@ export const parseTrack = (data: any): AlbumTrack => {
     artist: data.artists[0].name,
   };
 };
+
+export function cleanTrackName(name: string) {
+  return name.replace(/- Remastered.*/i, "").trim();
+}

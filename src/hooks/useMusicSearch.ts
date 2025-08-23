@@ -3,12 +3,13 @@ import { toast } from "sonner";
 import { debounce } from "@/lib/utils";
 import { getRelatedSearch } from "@/actions";
 import { SearchSuggestion } from "@/types";
+import useMusicSearchStore from "@/stores/music-search.store";
 
 function useMusicSearch() {
+  const { isFocused, setIsFocused } = useMusicSearchStore();
   const [prompt, setPrompt] = useState("");
   const [relatedResults, setRelatedResults] = useState<SearchSuggestion[]>([]);
   const [isResultsVisible, setResultsVisible] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
   const [reloadCount, setReloadCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
