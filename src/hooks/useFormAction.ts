@@ -14,7 +14,6 @@ function useFormAction() {
     selectedResult,
     setSelectedResult,
     isLoading,
-    setIsLoading,
   } = useFormActionStore();
   const [scrapingResult, setScrapingResult] = useState<string | null>(null);
   const [email, setEmail] = useState("");
