@@ -4,14 +4,16 @@ import { debounce } from "@/lib/utils";
 import { getRelatedSearch } from "@/actions";
 import { SearchSuggestion } from "@/types";
 import useMusicSearchStore from "@/stores/music-search.store";
+import useFormAction from "./useFormAction";
 
 function useMusicSearch() {
   const { isFocused, setIsFocused } = useMusicSearchStore();
   const [prompt, setPrompt] = useState("");
   const [relatedResults, setRelatedResults] = useState<SearchSuggestion[]>([]);
-  const [isResultsVisible, setResultsVisible] = useState(false);
+  const [isSearchResultsVisible, setSearchResultsVisible] = useState(false);
   const [reloadCount, setReloadCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+
+  const { onMusicSelection, setIsLoading } = useFormAction();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -57,10 +59,26 @@ function useMusicSearch() {
 
   const reloadRecs = () => setReloadCount((prev) => prev + 1);
 
+  // selecciona del dropdown o el chip de recomendacion
+  const handleBasicSelection = (
+    selectedSearchSuggestion: SearchSuggestion,
+    isAI = false
+  ) => {
+    if (isAI) {
+      handlePromptChange(
+        selectedSearchSuggestion.album === prompt
+          ? ""
+          : selectedSearchSuggestion.album
+      );
+    }
+    setSearchResultsVisible(false);
+    onMusicSelection(selectedSearchSuggestion);
+  };
+
   useEffect(() => {
     const handleClickOutside = (e: any) => {
       if (inputRef.current && !inputRef.current.contains(e.target)) {
-        setResultsVisible(false);
+        setSearchResultsVisible(false);
       }
     };
 
@@ -71,16 +89,16 @@ function useMusicSearch() {
   return {
     prompt,
     relatedResults,
-    isResultsVisible,
+    isSearchResultsVisible,
     isFocused,
     reloadCount,
-    isLoading,
     inputRef,
-    setResultsVisible,
+    setSearchResultsVisible,
     setIsFocused,
     handlePromptChange,
     clearSearch,
     reloadRecs,
+    handleBasicSelection,
   };
 }
 export default useMusicSearch;

@@ -25,6 +25,7 @@ const nextConfig: NextConfig = {
         search: "",
       },
       { hostname: "img.clerk.com" },
+      { hostname: "www.picclickimg.com" },
     ],
   },
 };

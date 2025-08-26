@@ -3,16 +3,18 @@
 import Image from "next/image";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { LoginDrawer } from "../login-drawer";
-import type { SearchSuggestion } from "@/types";
+import useFormAction from "@/hooks/useFormAction";
 
 interface SelectedResultProps {
-  data: SearchSuggestion;
   userInfo?: any | undefined;
   handleGenerateClick: () => void;
 }
 
 function SelectedResult(props: SelectedResultProps) {
-  const { data, handleGenerateClick } = props;
+  const { handleGenerateClick } = props;
+  const { selectedResult } = useFormAction();
+
+  if (!selectedResult) return null;
 
   return (
     <div
@@ -25,20 +27,20 @@ function SelectedResult(props: SelectedResultProps) {
             width={96}
             height={96}
             className="w-24 h-24 rounded-2xl shadow-xl border-2 border-gray-700/50 group-hover:scale-105 transition-transform"
-            src={data.img.medium || "/placeholder.svg"}
-            alt={`${data.album} cover`}
+            src={selectedResult.img.medium || "/placeholder.svg"}
+            alt={`${selectedResult.album} cover`}
           />
           <div className="absolute inset-0 bg-blue-500/20 rounded-2xl blur-xl -z-10 scale-110" />
         </div>
 
         <div className="space-y-2">
           <span className="inline-flex items-center px-3 py-1 text-xs font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded-full">
-            {data.type}
+            {selectedResult.type}
           </span>
           <h3 className="text-xl font-semibold text-white leading-tight">
-            {data.album}
+            {selectedResult.album}
           </h3>
-          <p className="text-gray-400 font-medium">{data.artist}</p>
+          <p className="text-gray-400 font-medium">{selectedResult.artist}</p>
         </div>
       </div>
 

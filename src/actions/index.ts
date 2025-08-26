@@ -9,6 +9,7 @@ import { sendMailWithPDF } from "@/lib/nodemailer";
 import { getSpotifyAccessToken } from "@/helpers/tokenManager";
 import * as cheerio from "cheerio";
 import { SearchSuggestion } from "@/types";
+import { getSpotifyId } from "@/lib/utils";
 
 const SPOTIFY_API = "https://api.spotify.com/v1";
 
@@ -237,7 +238,7 @@ export const getAIRecommendations = async () => {
 
     return data.map(
       (item: any): SearchSuggestion => ({
-        id: item._id,
+        id: getSpotifyId(item.spotifyId) || item._id,
         artist: item.artist || item.name,
         album: item.name,
         img: {

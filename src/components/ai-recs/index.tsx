@@ -3,27 +3,26 @@ import { useEffect } from "react";
 import { getAIRecommendations } from "@/actions";
 import type { SearchSuggestion } from "@/types";
 import { onErrorImage } from "@/lib/utils";
+import useMusicSearch from "@/hooks/useMusicSearch";
+import useFormAction from "@/hooks/useFormAction";
 
 type AIRecsProps = {
-  onMusicSelection: (result: SearchSuggestion) => void;
   reloadRecs: number;
 };
 
-function AIRecs({ onMusicSelection, reloadRecs }: AIRecsProps) {
+function AIRecs({ reloadRecs }: AIRecsProps) {
   const [recommendations, action, pending] = useActionState<SearchSuggestion[]>(
     getAIRecommendations,
     [] as SearchSuggestion[]
   );
 
+  const { handleBasicSelection } = useMusicSearch();
+  const { isLoading } = useFormAction();
   useEffect(() => {
     startTransition(() => {
       action();
     });
   }, [action, reloadRecs]);
-
-  const handleRecommendationClick = (rec: SearchSuggestion) => {
-    onMusicSelection(rec);
-  };
 
   return (
     <div className="flex flex-wrap gap-2 absolute justify-center w-full left-0">
@@ -43,7 +42,8 @@ function AIRecs({ onMusicSelection, reloadRecs }: AIRecsProps) {
         recommendations.map((rec) => (
           <button
             key={rec.id}
-            onClick={() => handleRecommendationClick(rec)}
+            disabled={isLoading}
+            onClick={() => handleBasicSelection(rec)}
             className="flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-gray-800/30 to-gray-700/30 border border-gray-600/30 hover:border-gray-500/50 hover:bg-gradient-to-r hover:from-gray-700/40 hover:to-gray-600/40 transition-all duration-200 group"
           >
             <img

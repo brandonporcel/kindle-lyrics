@@ -8,7 +8,10 @@ interface PdfPresentationProps {
 
 function PdfPresentation({ data, onClear, search }: PdfPresentationProps) {
   return (
-    <div className="isolate flex w-full flex-col flex-nowrap items-stretch gap-4 rounded-2xl bg-gray-900/50 backdrop-blur-sm border border-white/10 px-4 py-4 shadow-2xl">
+    <div
+      className="isolate flex w-full flex-col flex-nowrap items-stretch gap-4 rounded-2xl bg-gray-900/50 backdrop-blur-sm border border-white/10 px-4 py-4 shadow-2xl"
+      style={{ marginTop: 48 }}
+    >
       <PdfPresentationHeader search={search} data={data} onClear={onClear} />
       <div className="relative aspect-square overflow-hidden max-h-160 rounded-xl border border-white/5">
         {!data && (

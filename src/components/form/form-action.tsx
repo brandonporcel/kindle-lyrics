@@ -20,16 +20,14 @@ export default function FormAction() {
     handlePdfGeneration,
     handleSendPdf,
     handleClearPdf,
-    handleMusicSelection,
   } = useFormAction();
 
   return (
     <div className="w-full max-w-lg space-y-2 duration-1200 ease-in-out animate-in fade-in slide-in-from-bottom-4">
-      <Form onMusicSelection={handleMusicSelection} />
+      <Form />
 
       {selectedResult && !isGeneratingPdf && status !== "pdf-preview" && (
         <SelectedResult
-          data={selectedResult}
           handleGenerateClick={() => handlePdfGeneration(selectedResult.id)}
         />
       )}

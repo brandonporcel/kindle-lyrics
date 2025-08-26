@@ -6,13 +6,18 @@ import { SearchSuggestion } from "@/types";
 import useFormActionStore from "@/stores/form-action.store";
 
 function useFormAction() {
-  const { isGeneratingPdf, setIsGeneratingPdf, status, setStatus } =
-    useFormActionStore();
+  const {
+    isGeneratingPdf,
+    setIsGeneratingPdf,
+    status,
+    setStatus,
+    selectedResult,
+    setSelectedResult,
+    isLoading,
+    setIsLoading,
+  } = useFormActionStore();
   const [scrapingResult, setScrapingResult] = useState<string | null>(null);
   const [email, setEmail] = useState("");
-  const [selectedResult, setSelectedResult] = useState<SearchSuggestion | null>(
-    null
-  );
   const [isSendingPdf, setIsSendingPdf] = useState(false);
 
   const handlePdfGeneration = async (albumId: string) => {
@@ -73,7 +78,7 @@ function useFormAction() {
     setStatus("to-search");
   };
 
-  const handleMusicSelection = (newSelectedResult: SearchSuggestion) => {
+  const onMusicSelection = (newSelectedResult: SearchSuggestion) => {
     if (newSelectedResult.album === selectedResult?.album) {
       setSelectedResult(null);
       return;
@@ -92,7 +97,8 @@ function useFormAction() {
     handlePdfGeneration,
     handleSendPdf,
     handleClearPdf,
-    handleMusicSelection,
+    onMusicSelection,
+    isLoading,
   };
 }
 
