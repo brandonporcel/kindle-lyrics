@@ -63,6 +63,8 @@ Follow these steps to obtain and configure your keys:
   - Search only songs and not albums.
     - After successfully sending the e-mail, suggest the album associated with the selected song.
 - [ ] Create database to save users and their preferences (liked albums, historial, save kindle mails)
+- [ ] Edit pdf metadata and set author
+  - Posibily of send .mobi?
 
 ## 🤝 Contributions
 
