@@ -19,21 +19,14 @@ const geistMono = Geist_Mono({
 });
 
 const appDescription =
-  "Easily transfer and enjoy the lyrics of your favorite albums on your Kindle. Discover, learn, and immerse yourself in music like never before!";
+  "Easily transfer and enjoy the lyrics of your favorite albums on your Kindle";
 const appShortTitle = "Kindle Lyrics: Your music, your Kindle, your way";
 
-const slogan = "Kindle Lyrics - Transfer Album Lyrics to Kindle";
 export const metadata: Metadata = {
   title: "Kindle Lyrics | Transfer Album Lyrics to Kindle",
   description: appDescription,
-  keywords: [
-    "lyrics",
-    "music albums",
-    "kindle",
-    "album lyrics",
-    "lyrics on kindle",
-  ],
-  authors: { name: "Brandon Porcel", url: "https://github.com/brandonporcel" },
+  keywords: ["music albums", "kindle", "album lyrics", "lyrics on kindle"],
+  authors: { name: "Brandon Porcel", url: "https://github.com/brandonporcel?" },
   creator: "Brandon Porcel",
   openGraph: {
     type: "website",
@@ -47,7 +40,6 @@ export const metadata: Metadata = {
         url: "https://kindle-lyrics.vercel.app/og.png",
         width: 1200,
         height: 630,
-        alt: slogan,
       },
     ],
   },
@@ -60,7 +52,6 @@ export const metadata: Metadata = {
         url: "https://kindle-lyrics.vercel.app/og.png",
         width: 1200,
         height: 630,
-        alt: slogan,
       },
     ],
   },
