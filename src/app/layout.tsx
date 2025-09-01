@@ -24,10 +24,8 @@ const appShortTitle = "Kindle Lyrics: Your music, your Kindle, your way";
 
 const slogan = "Kindle Lyrics - Transfer Album Lyrics to Kindle";
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kindle-lyrics.vercel.app"),
   title: "Kindle Lyrics | Transfer Album Lyrics to Kindle",
-  description:
-    "Turn your Kindle into a personal music lyric hub. Send and read album lyrics anywhere, anytime!",
+  description: appDescription,
   keywords: [
     "lyrics",
     "music albums",
@@ -37,20 +35,6 @@ export const metadata: Metadata = {
   ],
   authors: { name: "Brandon Porcel", url: "https://github.com/brandonporcel" },
   creator: "Brandon Porcel",
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  alternates: {
-    canonical: "https://kindle-lyrics.vercel.app",
-  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -60,7 +44,7 @@ export const metadata: Metadata = {
     siteName: "Kindle Lyrics",
     images: [
       {
-        url: "/og.png",
+        url: "https://kindle-lyrics.vercel.app/og.png",
         width: 1200,
         height: 630,
         alt: slogan,
