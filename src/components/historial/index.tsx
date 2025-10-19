@@ -24,7 +24,7 @@ function Historial() {
           {recentPdfs.map((pdf) => (
             <div
               key={pdf.id}
-              className="aspect-[3/4] bg-card border-border hover:bg-accent/50 transition-colors cursor-pointer relative overflow-hidden "
+              className="aspect-[3/4] bg-card border-border hover:bg-accent/50 transition-colors relative overflow-hidden "
             >
               <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-gray-200/80 to-gray-300/90 dark:from-gray-800/80 dark:to-gray-900/90 backdrop-blur-sm">
                 <div className="h-full w-full relative overflow-hidden">

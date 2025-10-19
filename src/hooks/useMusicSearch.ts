@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { debounce } from "@/lib/utils";
-import { getRelatedSearch } from "@/actions";
+import { getRelatedSearch } from "@/actions/spotify.actions";
 import { SearchSuggestion } from "@/types";
 import useMusicSearchStore from "@/stores/music-search.store";
 import useFormAction from "./useFormAction";

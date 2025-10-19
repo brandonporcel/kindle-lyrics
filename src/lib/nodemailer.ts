@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { generatePDF } from "@/actions";
+import { generatePDF } from "@/actions/pdf.actionts";
 
 const SMTP_SERVER_HOST = process.env.SMTP_SERVER_HOST;
 const SMTP_SERVER_USERNAME = process.env.SMTP_SERVER_USERNAME;

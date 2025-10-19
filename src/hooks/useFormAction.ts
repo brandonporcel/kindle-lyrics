@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
-import { getPDFTemplate, sendAlbumEmail } from "@/actions";
+import { getPDFTemplate } from "@/actions/pdf.actionts";
+import { sendAlbumEmail } from "@/actions/email.actions";
 import { SearchSuggestion } from "@/types";
 import useFormActionStore from "@/stores/form-action.store";
 
@@ -38,7 +39,7 @@ function useFormAction() {
     }
   };
 
-  const handleSendedAlbum = () => {
+  const handleSuccessSending = () => {
     toast.success("Pdf with lyrics sent correctly!", {
       position: "top-center",
     });
@@ -61,7 +62,7 @@ function useFormAction() {
         email,
         albumName: selectedResult ? selectedResult.album : "album",
       });
-      handleSendedAlbum();
+      handleSuccessSending();
     } catch (error) {
       console.error("Error sending PDF:", error);
       toast.error("Failed to send PDF. Please try again.");

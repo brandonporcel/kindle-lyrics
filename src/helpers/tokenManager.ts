@@ -1,4 +1,4 @@
-import { refreshToken } from "@/actions";
+import { refreshToken } from "@/actions/spotify.actions";
 import CONSTANTS from "@/constants";
 import axiosInstance from "@/lib/axios";
 

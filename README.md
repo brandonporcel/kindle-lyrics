@@ -55,14 +55,14 @@ Follow these steps to obtain and configure your keys:
   - [ ] Add anotations to the lyrics
   - [ ] Search another hosting to make fast scrappings. Now it is in render
 - [ ] Implement deepl for translations of lyrics
-- [ ] Add option to select saveds kindle emails and not typing every time
-- [ ] Handle pdf download, save favorite
 - [ ] Add tests
 - [ ] Allow users to log in with Spotify and display their liked albums for easy selection and lyric generation.
 - [ ] Add a search filter with the ability to:
   - Search only songs and not albums.
     - After successfully sending the e-mail, suggest the album associated with the selected song.
 - [ ] Create database to save users and their preferences (liked albums, historial, save kindle mails)
+  - [ ] Add option to select saveds kindle emails and not typing every time
+  - [ ] Handle pdf download, save favorite
 - [ ] Edit pdf metadata and set author
   - Posibily of send .mobi?
 

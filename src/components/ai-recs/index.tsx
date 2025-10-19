@@ -1,6 +1,6 @@
 import { useActionState, startTransition } from "react";
 import { useEffect } from "react";
-import { getAIRecommendations } from "@/actions";
+import { getAIRecommendations } from "@/actions/recommendations.actions";
 import type { SearchSuggestion } from "@/types";
 import { onErrorImage } from "@/lib/utils";
 import useMusicSearch from "@/hooks/useMusicSearch";
