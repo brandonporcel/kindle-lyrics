@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
-import { getPDFTemplate } from "@/actions/pdf.actionts";
+import { getPDFTemplate } from "@/actions/pdf.actions";
 import { sendAlbumEmail } from "@/actions/email.actions";
 import { SearchSuggestion } from "@/types";
 import useFormActionStore from "@/stores/form-action.store";
