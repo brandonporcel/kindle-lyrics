@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
-import { generatePDF } from "@/actions/pdf.actionts";
+// import { generatePDF } from "@/actions/pdf.actionts";
+import { generateEPUB } from "@/actions/epub.actions";
 
 const SMTP_SERVER_HOST = process.env.SMTP_SERVER_HOST;
 const SMTP_SERVER_USERNAME = process.env.SMTP_SERVER_USERNAME;
@@ -32,7 +33,8 @@ export async function sendMailWithPDF({
   filename: string;
 }) {
   try {
-    const pdfBuffer = await generatePDF({ source: pdfContent });
+    // const pdfBuffer = await generatePDF({ source: pdfContent });
+    const pdfBuffer = await generateEPUB({ source: pdfContent });
 
     const info = await transporter.sendMail({
       from: '"Kindle Lyrics 💿" <brandon7.7porcel@gmail.com>',
