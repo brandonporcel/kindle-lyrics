@@ -1,21 +1,23 @@
 import nodepub from "nodepub";
 import fs from "fs/promises";
 import path from "path";
+import axios from "axios";
 import os from "os";
 import * as cheerio from "cheerio";
 
-// async function downloadCoverToTemp(url: string): Promise<string> {
-//   const response = await axios.get(url, {
-//     responseType: "arraybuffer",
-//   });
+async function downloadCoverToTemp(url: string): Promise<string> {
+  const response = await axios.get(url, {
+    responseType: "arraybuffer",
+  });
 
-//   const tempPath = path.join(os.tmpdir(), `cover-${Date.now()}.jpg`);
-//   await fs.writeFile(tempPath, response.data);
-//   return tempPath;
-// }
+  const tempPath = path.join(os.tmpdir(), `cover-${Date.now()}.jpg`);
+  await fs.writeFile(tempPath, response.data);
+  return tempPath;
+}
 
 export const generateEPUB = async ({ source }: { source: string }) => {
   let outputDir: string | null = null;
+  let coverPath: string | null = null;
 
   try {
     console.log("📚 Starting EPUB generation...");
@@ -26,12 +28,15 @@ export const generateEPUB = async ({ source }: { source: string }) => {
     // Extraer información del álbum del primer h1 (si existe)
     const firstH1 = $("h1").first().text();
     const [artist] = firstH1.split(" - ").map((s) => s.trim());
+    coverPath = await downloadCoverToTemp(
+      "https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36"
+    );
 
     // Metadata
     const metadata = {
       id: `album-${Date.now()}`,
-      cover: "/og.png",
-      // cover: coverPath, // Ruta local
+      // cover: "og.png",
+      cover: coverPath, // Ruta local
       title: artist ? `${artist} - Lyrics` : "Album Lyrics",
       author: artist || "Various Artists",
       publisher: "Kindle Lyrics",
