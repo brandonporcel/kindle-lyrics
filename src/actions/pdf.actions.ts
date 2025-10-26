@@ -36,13 +36,10 @@ const generateHtmlTemplate = (template: string): string => {
 };
 
 export const getPDFTemplate = async ({ albumId }: { albumId: string }) => {
-  console.log("0");
   const url = `${SPOTIFY_API}/albums/${albumId}/tracks`;
-  console.log("1");
 
   try {
     const token = await getSpotifyAccessToken();
-    console.log("2");
     const response = await axios.get(url, {
       headers: { Authorization: `Bearer ${token}` },
     });

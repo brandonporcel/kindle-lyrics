@@ -30,7 +30,8 @@ export const generateEPUB = async ({ source }: { source: string }) => {
     // Metadata
     const metadata = {
       id: `album-${Date.now()}`,
-      cover: "public/og.png",
+      cover: "/og.png",
+      // cover: coverPath, // Ruta local
       title: artist ? `${artist} - Lyrics` : "Album Lyrics",
       author: artist || "Various Artists",
       publisher: "Kindle Lyrics",
