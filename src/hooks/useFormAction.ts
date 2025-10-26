@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
-import { getPDFTemplate } from "@/actions/pdf.actions";
+import { generatePDF, getPDFTemplate } from "@/actions/pdf.actions";
 import { sendAlbumEmail } from "@/actions/email.actions";
 import { SearchSuggestion } from "@/types";
 import useFormActionStore from "@/stores/form-action.store";
@@ -34,7 +34,6 @@ function useFormAction() {
       console.error("Error generating PDF:", error);
       setStatus("to-search");
     } finally {
-      console.log("termino?");
       setIsGeneratingPdf(false);
     }
   };
@@ -87,6 +86,39 @@ function useFormAction() {
     setSelectedResult(newSelectedResult);
   };
 
+  const downloadPDF = async (template: string | null) => {
+    if (!template) return;
+
+    try {
+      setIsGeneratingPdf(true);
+
+      const base64PDF = await generatePDF({ source: template });
+
+      const binaryString = window.atob(base64PDF.base64);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { type: "application/pdf" });
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `lyrics-${Date.now()}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      console.log("✅ PDF downloaded successfully!");
+    } catch (error: any) {
+      console.error("❌ Error downloading PDF:", error.message);
+      alert("Failed to generate PDF");
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
   return {
     scrapingResult,
     email,
@@ -101,6 +133,7 @@ function useFormAction() {
     onMusicSelection,
     isLoading,
     setIsLoading,
+    downloadPDF,
   };
 }
 

@@ -95,7 +95,8 @@ export async function generatePDF(data: { source: string }) {
       }
     );
 
-    return response.data;
+    const base64 = Buffer.from(response.data).toString("base64");
+    return { arrayBuffer: response.data, base64 };
   } catch (error: any) {
     console.error("Error generating PDF with PDFShift:", error.message);
     throw error.message;

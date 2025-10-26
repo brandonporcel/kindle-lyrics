@@ -1,6 +1,6 @@
 "use server";
 
-import { sendMailWithPDF } from "@/lib/nodemailer";
+import { sendMail } from "@/lib/nodemailer";
 
 export const sendAlbumEmail = async ({
   email,
@@ -12,7 +12,7 @@ export const sendAlbumEmail = async ({
   template: string;
 }) => {
   try {
-    const response = await sendMailWithPDF({
+    const response = await sendMail({
       to: email,
       subject: "convert",
       text: "",
