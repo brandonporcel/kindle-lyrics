@@ -18,7 +18,7 @@ export const sendAlbumEmail = async ({
       text: "",
       html: `<p>${albumName}</p>`,
       pdfContent: template,
-      filename: albumName + ".pdf",
+      filename: albumName,
     });
 
     return response;

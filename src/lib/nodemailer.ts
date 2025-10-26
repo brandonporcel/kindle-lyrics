@@ -44,7 +44,7 @@ export async function sendMailWithPDF({
       html: html ?? "",
       attachments: [
         {
-          filename: filename || "keep-lyrics.pdf",
+          filename: filename + ".epub",
           content: pdfBuffer as any,
         },
       ],
